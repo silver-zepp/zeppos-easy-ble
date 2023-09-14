@@ -5,7 +5,8 @@
 ### ⓘ Reasons to use it (over the original BLE Master implementation):
 1) All interactions are made with simple strings (no more arrays, arrays buffer nonsense)
 
-2) All RETURN types are also automatically converted into strings. dev_addr is now a proper MAC address "A1:B2:C3..."
+2) All RETURN types are also automatically converted into strings. dev_addr is now
+    a proper MAC address "A1:B2:C3..."
 
 3) Simple profile interaction - startListener vs mstOnPrepare -> mstBuildProfile -> interact
 
@@ -15,7 +16,8 @@
 
 6) Ready to handle multiple connections
 
-7) To disconnect/pair the device you no longer need to remember/store the connect_id - just use device's MAC address
+7) To disconnect/pair the device you no longer need to remember/store the connect_id -
+    just use device's MAC address
 
 8) New setters and getters - get.devices() // returns an object that contains info about all previously
     scanned/connected devices format shown below
@@ -42,6 +44,47 @@ Get library: [easy-ble](https://github.com/silver-zepp/zeppos-easy-ble/blob/mast
 
 Get example: [ble-master-example](https://github.com/silver-zepp/zeppos-easy-ble/tree/master/ble-master-example)
 
+## How to use it (example):
+```js
+init(){
+    // start scanning for nearby devices
+    const scan_success = ble.startScan((scan_result) => {
+        // if the device that we search for is found
+        if (ble.get.hasDevice(MAC)){
+            // stop the scan
+            ble.stopScan();
+            
+            // start connecting
+            ble.connect(MAC, (connect_result) => {
+                if (ble.get.isConnected(MAC)){
+
+                    // init (modify) profile
+                    const profile_object = ble.modifyProfileObject(MAC, original_profile_object);
+
+                    // start listener
+                    ble.startListener(profile_object, (status)=> { // backend_response // profile, status
+                        // if status = OK (0), write your attributes
+                        if (status === 0){ 
+                            // Write the light_off data to the characteristic
+                            const result = ble.write.characteristic(LAMP_MAC, 'A040', light_off_ab);
+
+                            if (result.success) {
+                                vis.log("Successfully wrote characteristic");
+                            } else {
+                                vis.log("Failed to write characteristic:", result.error);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+stop(){
+    // gracefully stop all callbacks, destroy profile's backend instance the disconnect the BLE 
+    ble.stop(MAC);
+}
+```
 
 ### ⓘ Structure of get.devices() return object:
 ```js

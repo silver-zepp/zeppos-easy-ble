@@ -10,7 +10,7 @@
 
 3) Simple profile interaction - startListener vs mstOnPrepare -> mstBuildProfile -> interact
 
-4) Automatically stores profile id pointer and other essentials for for future handling
+4) Automatically stores profile id pointer and other essentials for future handling
 
 5) Stops everything with simple stop() call provided with a single MAC address
 

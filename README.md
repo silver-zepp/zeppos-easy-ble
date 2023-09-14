@@ -58,7 +58,8 @@ init(){
             ble.connect(MAC, (connect_result) => {
                 if (ble.get.isConnected(MAC)){
 
-                    // init (modify) profile
+                    // init (modify) profile (current hack before a proper ble.generateProfileObject implementation)
+                    // feed your profile object into this method to have connect_id and dev_addr array buffer populated
                     const profile_object = ble.modifyProfileObject(MAC, original_profile_object);
 
                     // start listener

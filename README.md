@@ -81,7 +81,7 @@ init(){
     });
 }
 stop(){
-    // gracefully stop all callbacks, destroy profile's backend instance the disconnect the BLE 
+    // gracefully stop all callbacks, destroy profile's backend instance and finally disconnect the BLE 
     ble.stop(MAC);
 }
 ```

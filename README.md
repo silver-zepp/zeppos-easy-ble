@@ -58,7 +58,7 @@ ble.connect(MAC, (connect_result)=>{
 >
 > ### 💡 New example added 
 >`./examples/ble-master-metric-parse`<br>
-> #### Let's you parse battery level and heart rate from other Amazfit devices.<br>
+#### Let's you parse battery level and heart rate from other Amazfit devices.<br>
 ![](/assets/hr-and-bat-parse-example.jpg)
 
 # 📝 Easy BLE (Master) API Reference

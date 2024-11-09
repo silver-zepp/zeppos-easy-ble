@@ -1,7 +1,7 @@
 # 🐦 Easy BLE library for ZeppOS v3+
 ![](/assets/easy-ble-esp32-showcase.gif)
 ### Description
-The `Easy BLE` library is an advanced BLE management tool for `ZeppOS 3.0` watches that features an automated profile generator, a hybrid asynchronous and sequential queue for efficient handling of all operations including writing and reading, user-friendly string-based interactions, seamless auto-conversions of data and addresses, support for multiple data types, and simplified device management through MAC address-centric commands, all designed to enhance usability and streamline BLE communications.
+The `Easy BLE` library is an advanced BLE management tool for `ZeppOS v3+` watches that features an automated profile generator, a hybrid asynchronous and sequential queue for efficient handling of all operations including writing and reading, user-friendly string-based interactions, seamless auto-conversions of data and addresses, support for multiple data types, and simplified device management through MAC address-centric commands, all designed to enhance usability and streamline BLE communications.
 
 ## To install the library run (from the root of your project)
 ```bash

@@ -1,4 +1,5 @@
 # 🐦 Easy BLE library for ZeppOS v3+
+![](/assets/easy-ble-esp32-showcase.gif)
 ### Description
 The `Easy BLE` library is an advanced BLE management tool for `ZeppOS 3.0` watches that features an automated profile generator, a hybrid asynchronous and sequential queue for efficient handling of all operations including writing and reading, user-friendly string-based interactions, seamless auto-conversions of data and addresses, support for multiple data types, and simplified device management through MAC address-centric commands, all designed to enhance usability and streamline BLE communications.
 
@@ -10,7 +11,7 @@ npm i @silver-zepp/easy-ble
 ## ✨️ Full Communications Example
 ```js
 // install -> npm i @silver-zepp/easy-ble
-import BLEMaster from "@silver-zepp/easy-ble"
+import { BLEMaster } from "@silver-zepp/easy-ble";
 const ble = new BLEMaster();
 
 // the mac of a device you are connecting to
@@ -54,6 +55,12 @@ ble.connect(MAC, (connect_result)=>{
 });
 ```
 
+>
+> ### 💡 New example added 
+>`./examples/ble-master-metric-parse`<br>
+> #### Let's you parse battery level and heart rate from other Amazfit devices.<br>
+![](/assets/hr-and-bat-parse-example.jpg)
+
 # 📝 Easy BLE (Master) API Reference
 
 ## 📍BLEMaster (default class)
@@ -74,10 +81,10 @@ Starts scanning for BLE devices.
 
 ```js
 // example: start scanning for devices and log each found device
-.startScan((device) => { console.log('Found device:', device); }); 
+ble.startScan((device) => { console.log('Found device:', device); }); 
 
 // advanced example: start scanning for 10 seconds with a custom throttle interval and allow duplicates, then stop and log
-.startScan((device) =>  { console.log('Found device during scan:', device); }, 
+ble.startScan((device) =>  { console.log('Found device during scan:', device); }, 
            { duration: 10000, throttle_interval: 500, allow_duplicates: true, on_duration: () => console.log('Scan complete') });
 ```
 
@@ -93,10 +100,10 @@ Stops the ongoing scanning process for BLE devices.
 
 ```js
 // Simply stop the scan
-.stopScan();
+ble.stopScan();
 
 // Advanced example: start scanning for devices and then stop scanning after the device was found
-.startScan((device) => {
+ble.startScan((device) => {
   if (.get.hasMAC("1A:2B:3C:4D:5E:6F")) 
     .stopScan();
 });
@@ -119,7 +126,7 @@ Attempts to connect to a BLE device.
 
 ```js
 // Connect to a device and log the result
-.connect("1A:2B:3C:4D:5E:6F", (result) => {
+ble.connect("1A:2B:3C:4D:5E:6F", (result) => {
   if (result.connected) {
     console.log('Connected to device');
   } else {
@@ -138,7 +145,7 @@ Disconnects from a BLE device.
 
 ```js
 // Disconnect from a device
-.disconnect();
+ble.disconnect();
 ```
 ### Returns
 {boolean} - true if the disconnection was successful, false if it failed or if the device was not connected.
@@ -151,7 +158,7 @@ Attempts to pair with a BLE device. WARNING: This method might not work as expec
 
 ```js
 // Attempt to pair with a device
-const success = .pair();
+const success = ble.pair();
 if (success) console.log('Pairing initiated successfully');
 else console.log('Pairing failed or device not connected');
 ```
@@ -171,8 +178,8 @@ Starts listening for profile preparation events and builds a profile for interac
 
 ```js
 // Start listener with a profile object
-const profile_object = .generateProfileObject(services); // detailed profile object
-.startListener(profile_object, (response) => {
+const profile_object = ble.generateProfileObject(services); // detailed profile object
+ble.startListener(profile_object, (response) => {
   if (response.success) {
     console.log('Profile preparation successful:', response.message);
   } else {
@@ -206,7 +213,7 @@ const services = {
 const permissions = {
   'char_uuid_1': PERMISSIONS.READ, // no need to provide perms for all UUIDs
 };
-const profile = .generateProfileObject(services, permissions);
+const profile = ble.generateProfileObject(services, permissions);
 ```
 ### Returns
 {object|null} - A generic profile object for the device, or null if the device was not found. The profile object includes device connection information, services, characteristics, and their permissions.
@@ -219,7 +226,7 @@ Quits all interactions with the currently connected device and cleans up.
 
 ```js
 // Quit interaction with a connected device
-.quit();
+ble.quit();
 ```
 
 
@@ -259,11 +266,11 @@ Writes data to a characteristic of a BLE device. This operation is queued to ens
 
 ```js
 // Write a string to a characteristic
-.write.characteristic('char_uuid', 'Hello World');
+ble.write.characteristic('char_uuid', 'Hello World');
 
 // Fast write an ArrayBuffer to a characteristic and don't wait for response
 const buffer = new Uint8Array([1, 2, 3]).buffer;
-.write.characteristic('char_uuid', buffer, true);
+ble.write.characteristic('char_uuid', buffer, true);
 ```
 
 
@@ -281,11 +288,11 @@ Writes data to a descriptor of a device's characteristic. This operation is queu
 
 ```js
 // Write a hex string to a descriptor
-.write.descriptor('char_uuid', 'desc_uuid', '0100');
+ble.write.descriptor('char_uuid', 'desc_uuid', '0100');
 
 // Write an ArrayBuffer to a descriptor
 const buffer = new Uint8Array([1, 2, 3]).buffer;
-.write.descriptor('char_uuid', 'desc_uuid', buffer);
+ble.write.descriptor('char_uuid', 'desc_uuid', buffer);
 ```
 
 
@@ -302,7 +309,7 @@ Enables or disables notifications for a characteristic by writing to the CCCD (C
 
 ```js
 // Toggle notifications for a characteristic (true/false)
-.write.enableCharaNotifications('char_uuid', true);
+ble.write.enableCharaNotifications('char_uuid', true);
 ```
 
 
@@ -321,7 +328,7 @@ Reads data from a characteristic of a BLE device. This operation is queued to en
 
 ```js
 // Read data from a characteristic
-const read = .read.characteristic('char_uuid');
+const read = ble.read.characteristic('char_uuid');
 if (read.success) console.log('Read successful');
 else console.log('Read failed:', read.error);
 ```
@@ -341,7 +348,7 @@ Reads data from a descriptor of a characteristic of a BLE device. This operation
 
 ```js
 // Read data from a descriptor
-const desc = .read.descriptor("1A:2B:3C:4D:5E:6F", 'char_uuid', 'desc_uuid');
+const desc = ble.read.descriptor("1A:2B:3C:4D:5E:6F", 'char_uuid', 'desc_uuid');
 if (desc.success) console.log('Descriptor read successful');
 else console.log('Descriptor read failed:', desc.error);
 ```
@@ -364,7 +371,7 @@ Registers a callback for the characteristic read complete event. This callback i
 
 ```js
 // Register callback for characteristic read complete event
-.on.charaReadComplete((uuid, status) => {
+ble.on.charaReadComplete((uuid, status) => {
   console.log('Characteristic read complete for UUID:', uuid, 'with status:', status);
 });
 ```
@@ -385,7 +392,7 @@ Registers a callback for the characteristic value arrived event. This callback i
 
 ```js
 // Register callback for characteristic value arrived event
-.on.charaValueArrived((uuid, data, length) => {
+ble.on.charaValueArrived((uuid, data, length) => {
   console.log('Value arrived for UUID:', uuid, 'Data:', data, 'Length:', length);
 });
 ```
@@ -407,7 +414,7 @@ Registers a callback for the characteristic write complete event. This callback 
 
 ```js
 // Register callback for characteristic write complete event
-.on.charaWriteComplete((uuid, status) => {
+ble.on.charaWriteComplete((uuid, status) => {
   console.log('Characteristic write complete for UUID:', uuid, 'Status:', status);
 });
 ```
@@ -429,7 +436,7 @@ Registers a callback for the descriptor read complete event. This callback is tr
 
 ```js
 // Register callback for descriptor read complete event
-.on.descReadComplete((chara, desc, status) => {
+ble.on.descReadComplete((chara, desc, status) => {
   console.log(`Descriptor read complete for Characteristic UUID: ${chara}, 
                Descriptor UUID: ${desc}, Status: ${status}`);
 });
@@ -453,7 +460,7 @@ Registers a callback for the descriptor value arrived event. This callback is tr
 
 ```js
 // Register callback for descriptor value arrived event
-.on.descValueArrived((chara, desc, data, length) => {
+ble.on.descValueArrived((chara, desc, data, length) => {
   console.log(`Descriptor value arrived for Characteristic UUID: ${chara}, 
                Descriptor UUID: ${desc}, Data: ${data}, Length: ${length}`);
 });
@@ -477,7 +484,7 @@ Registers a callback for the descriptor write complete event. This callback is t
 
 ```js
 // Register callback for descriptor write complete event
-.on.descWriteComplete((chara, desc, status) => {
+ble.on.descWriteComplete((chara, desc, status) => {
   console.log(`Descriptor write complete for Characteristic UUID: ${chara}, 
                Descriptor UUID: ${desc}, Status: ${status}`);
 });
@@ -500,7 +507,7 @@ Registers a callback for the characteristic notification event. This callback is
 
 ```js
 // Register callback for characteristic notification event
-.on.charaNotification((uuid, data, length) => {
+ble.on.charaNotification((uuid, data, length) => {
   console.log(`Notification received for UUID: ${uuid}, Data: ${data}, Length: ${length}`);
 });
 ```
@@ -522,7 +529,7 @@ Registers a callback for the service change begin event. This callback is trigge
 
 ```js
 // Register callback for service change begin event
-.on.serviceChangeBegin(() => {
+ble.on.serviceChangeBegin(() => {
   console.log(`Service change has begun`);
 });
 ```
@@ -540,7 +547,7 @@ Registers a callback for the service change end event. This callback is triggere
 
 ```js
 // Register callback for service change end event
-.on.serviceChangeEnd(() => {
+ble.on.serviceChangeEnd(() => {
   console.log(`Service change has ended`);
 });
 ```
@@ -556,7 +563,7 @@ Deregisters the callback for characteristic read complete event.
 #### Examples
 
 ```js
-.off.charaReadComplete();
+ble.off.charaReadComplete();
 ```
 
 
@@ -567,7 +574,7 @@ Deregisters the callback for characteristic value arrived event.
 #### Examples
 
 ```js
-.off.charaValueArrived();
+ble.off.charaValueArrived();
 ```
 
 
@@ -578,7 +585,7 @@ Deregisters the callback for characteristic write complete event.
 #### Examples
 
 ```js
-.off.charaWriteComplete();
+ble.off.charaWriteComplete();
 ```
 
 
@@ -589,7 +596,7 @@ Deregisters the callback for characteristic write complete event.
 #### Examples
 
 ```js
-.off.charaWriteComplete();
+ble.off.charaWriteComplete();
 ```
 
 
@@ -600,7 +607,7 @@ Deregisters the callback for descriptor value arrived event.
 #### Examples
 
 ```js
-.off.descValueArrived();
+ble.off.descValueArrived();
 ```
 
 
@@ -611,7 +618,7 @@ Deregisters the callback for descriptor write complete event.
 #### Examples
 
 ```js
-.off.descWriteComplete();
+ble.off.descWriteComplete();
 ```
 
 
@@ -622,7 +629,7 @@ Deregisters the callback for characteristic notification event.
 #### Examples
 
 ```js
-.off.charaNotification();
+ble.off.charaNotification();
 ```
 
 
@@ -633,7 +640,7 @@ Deregisters the callback for service change begin event.
 #### Examples
 
 ```js
-.off.serviceChangeBegin();
+ble.off.serviceChangeBegin();
 ```
 
 
@@ -644,7 +651,7 @@ Deregisters the callback for service change end event.
 #### Examples
 
 ```js
-.off.serviceChangeEnd();
+ble.off.serviceChangeEnd();
 ```
 
 
@@ -655,7 +662,7 @@ Deregisters all callbacks associated with the current BLE connection. This metho
 #### Examples
 
 ```js
-.off.deregisterAll();
+ble.off.deregisterAll();
 ```
 
 ### 📍Get (sub-class)
@@ -669,7 +676,7 @@ Retrieves information about all discovered devices.
 
 ```js
 // Get all discovered devices
-const devices = .get.devices();
+const devices = ble.get.devices();
 console.log('Discovered devices:', JSON.stringify(devices));
 ```
 ### Returns
@@ -684,7 +691,7 @@ Checks if a specific device is currently connected.
 
 ```js
 // Check if a device is connected
-const is_connected = .get.isConnected();
+const is_connected = ble.get.isConnected();
 console.log('Is device connected:', is_connected);
 ```
 ### Returns
@@ -703,7 +710,7 @@ Checks if a device with a specific MAC address has been discovered.
 
 ```js
 // Check if a specific mac has been discovered
-const has_mac = .get.hasMAC("1A:2B:3C:4D:5E:6F");
+const has_mac = ble.get.hasMAC("1A:2B:3C:4D:5E:6F");
 console.log('Has the mac been discovered:', has_mac);
 ```
 ### Returns
@@ -721,7 +728,7 @@ Checks if any discovered device has a specific device name.
 
 ```js
 // example: check if any device has the name "my ble peripheral"
-const has_dev_name = .get.hasDeviceName("my ble peripheral");
+const has_dev_name = ble.get.hasDeviceName("my ble peripheral");
 console.log('Has device name "my ble peripheral":', has_dev_name);
 ```
 
@@ -741,7 +748,7 @@ Checks if any discovered device has a specific service UUID.
 
 ```js
 // Check if any device has a specific service
-const has_service = .get.hasService("1812");
+const has_service = ble.get.hasService("1812");
 console.log('Has service 1812:', has_service);
 ```
 
@@ -760,7 +767,7 @@ Checks if any discovered device contains specific service data.
 
 ```js
 // Check if any device contains specific service data
-const has_service_data = .get.hasServiceData("somedata");
+const has_service_data = ble.get.hasServiceData("somedata");
 console.log('Has service data "somedata":', has_service_data);
 ```
 
@@ -779,7 +786,7 @@ Checks if any discovered device has a specific vendor data.
 
 ```js
 // Check if any device has "zepp" data
-const has_vendor_data = .get.hasVendorData("zepp");
+const has_vendor_data = ble.get.hasVendorData("zepp");
 console.log('Has vendor "zepp":', has_vendor_data);
 ```
 
@@ -798,7 +805,7 @@ Checks if any discovered device has a specific vendor ID.
 
 ```js
 // example: Check if any device has vendor ID 777
-const has_vendor_id = .get.hasVendorID(777);
+const has_vendor_id = ble.get.hasVendorID(777);
 console.log('Has vendor ID 777:', has_vendor_id);
 ```
 
@@ -814,7 +821,7 @@ Retrieves the profile pointer ID of a specific device. This is only useful if yo
 
 ```js
 // Get the profile ID of a device
-const profile_pid = .get.profilePID();
+const profile_pid = ble.get.profilePID();
 console.log('Profile pointer ID:', profile_pid);
 ```
 ### Returns
@@ -829,7 +836,7 @@ Retrieves the connection ID of a specific device. This is only useful if you nee
 
 ```js
 // Get the connection ID of a device
-const connection_id = .get.connectionID();
+const connection_id = ble.get.connectionID();
 console.log('Connection ID:', connection_id);
 ```
 ### Returns

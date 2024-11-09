@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@silver-zepp/easy-ble": "^1.7.8"
+  }
+}

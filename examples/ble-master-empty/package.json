@@ -1,0 +1,19 @@
+{
+  "name": "empty",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@zeppos/device-types": "^2.0.1"
+  },
+  "dependencies": {
+    "@silver-zepp/autogui": "^1.2.9",
+    "@silver-zepp/easy-ble": "^1.7.8-e",
+    "@silver-zepp/vis-log": "^1.1.1"
+  }
+}

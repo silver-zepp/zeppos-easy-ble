@@ -8,6 +8,11 @@ The `Easy BLE` library is an advanced BLE management tool for `ZeppOS v3+` watch
 npm i @silver-zepp/easy-ble
 ```
 
+## To make sure that downloaded examples work, execute
+```bash
+npm install
+```
+
 ## ✨️ Full Communications Example
 ```js
 // install -> npm i @silver-zepp/easy-ble
